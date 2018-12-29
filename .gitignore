@@ -1,0 +1,13 @@
+.vscode
+.DS_Store
+
+node_modules/
+package-lock.json
+
+server/logs/*.log
+
+dist/
+
+config/alioss.js
+
+
