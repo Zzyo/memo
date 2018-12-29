@@ -57,7 +57,7 @@ if (env === 'development') {
 } else {
   // 生产环境，启动api代理服务器
   app.use(proxy('/api', {
-    target: `http://${config.host}:${config.port}`,
+    target: `https://${config.host}:${config.port}`,
     pathRewrite: { '^/api': '' },
   }));
 
@@ -73,7 +73,7 @@ if (env === 'development') {
     if (err) {
       return;
     }
-    console.log(`服务器启动成功，端口号：${config.port}`);
+    console.log(`Https Server Listening at https://${config.host}:${config.port}`);
   });
 }
 
