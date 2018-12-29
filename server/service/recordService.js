@@ -5,7 +5,7 @@ const { getFilesUtil, getFileUtil, insertRecordIntoFileUtil } = require('../util
 
 const getRecords = async (query) => {
   const keywords = query.keywords || '';
-  const paths = fs.readdirSync(path.resolve('server', 'records'));
+  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md');
   const files = await getFilesUtil(paths);
   const records = files.filter(file => file.content.indexOf(keywords) > -1);
   return records;
