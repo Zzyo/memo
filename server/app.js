@@ -3,6 +3,7 @@ const https = require('https');
 const bodyParser = require('koa-bodyparser');
 const serve = require('koa-static');
 const enforceHttps = require('koa-sslify');
+const historyFallback = require('koa2-history-api-fallback');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
@@ -64,6 +65,9 @@ if (env === 'development') {
 
   // 将http请求强制转换为https请求
   app.use(enforceHttps());
+
+  // 刷新浏览器重定向，使所有浏览器操作都指向index.html
+  app.use(historyFallback());
 
   // 启动后端服务器
   https.createServer(options, app.callback()).listen(config.port, (err) => {
