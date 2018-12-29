@@ -1,2 +1,0 @@
-# memo
-a pwa memo
