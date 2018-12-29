@@ -1,7 +1,6 @@
 const Koa = require('koa');
 const https = require('https');
 const bodyParser = require('koa-bodyparser');
-const proxy = require('koa-server-http-proxy');
 const serve = require('koa-static');
 const enforceHttps = require('koa-sslify');
 const fs = require('fs');
@@ -56,13 +55,7 @@ if (env === 'development') {
     })}\n`);
   });
 } else {
-  // 生产环境，启动api代理服务器
-  app.use(proxy('/api', {
-    target: `https://${config.host}:${config.port}`,
-    pathRewrite: { '^/api': '' },
-  }));
-
-  // 启动静态资源服务器
+  // 生产环境，启动静态资源服务器
   if (config.useAlioss) {
     app.use(serve(path.resolve('server', 'views')));
   } else {
