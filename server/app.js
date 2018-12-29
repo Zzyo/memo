@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const https = require('https');
 const bodyParser = require('koa-bodyparser');
 const proxy = require('koa-server-http-proxy');
 const serve = require('koa-static');
@@ -8,6 +9,11 @@ const { exec } = require('child_process');
 
 const router2controller = require('./router2controller');
 const config = require('../config/index');
+
+const options = {
+  key: fs.readFileSync(path.resolve('server', 'key', '1626481_www.xiaojiachen.com.key')),
+  cert: fs.readFileSync(path.resolve('server', 'key', '1626481_www.xiaojiachen.com.pem')),
+};
 
 const env = process.env.NODE_ENV;
 const app = new Koa();
@@ -63,7 +69,7 @@ if (env === 'development') {
   }
 
   // 启动后端服务器
-  app.listen(config.port, (err) => {
+  https.createServer(options, app.callback()).listen(config.port, (err) => {
     if (err) {
       return;
     }
