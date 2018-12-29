@@ -3,6 +3,7 @@ const https = require('https');
 const bodyParser = require('koa-bodyparser');
 const proxy = require('koa-server-http-proxy');
 const serve = require('koa-static');
+const enforceHttps = require('koa-sslify');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
@@ -67,6 +68,9 @@ if (env === 'development') {
   } else {
     app.use(serve(config.assetsRoot));
   }
+
+  // 将http请求强制转换为https请求
+  app.use(enforceHttps());
 
   // 启动后端服务器
   https.createServer(options, app.callback()).listen(config.port, (err) => {
