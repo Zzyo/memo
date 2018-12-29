@@ -1,0 +1,134 @@
+@import '../../style/common.scss';
+
+@mixin button {
+  width: 550px;
+  height: 80px;
+  font-size: 30px;
+  font-weight: 200;
+  text-align: center;
+  color: #f08200;
+  line-height: 80px;
+  background-color: #f7f7f7;
+  border: 2px solid #ededed;
+  border-radius: 40px;
+}
+
+.Record>.header {
+  margin: 30px 37.5px;
+  width: 675px;
+  height: 50px;
+  font-size: 26px;
+  color: #919191;
+  line-height: 50px;
+  .header__target {
+    float: left;
+    i {
+      margin-right: 12px;
+      font-size: 36px;
+      vertical-align: -3px;
+    }
+  }
+  .header__date {
+    float: right;
+  }
+}
+
+.Record>.content {
+  position: absolute;
+  top: 110px;
+  left: 37.5px;
+  bottom: 120px;
+  width: 675px;
+  overflow: hidden;
+  .content__textarea {
+    width: 100%;
+    height: 100%;
+    font-size: 30px;
+    outline: none;
+    resize: none;
+  }
+}
+
+.Record>.btn--top {
+  @include button;
+  position: absolute;
+  left: 100px;
+  bottom: 15px;
+}
+
+.Record>.modal {
+  .modal__mask {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.25);
+  }
+  .modal__wrapper {
+    background: #fff;
+    position: absolute;
+    bottom: 15px;
+    left: 25px;
+    width: 700px;
+    height: 830px;
+    border-radius: 30px;
+    .modal__header {
+      width: 100%;
+      height: 110px;
+      font-size: 36px;
+      color: #292929;
+      line-height: 110px;
+      text-align: center;
+      border-bottom: 4px solid #e6e6e6;
+    }
+    .modal__tags {
+      margin: 0 30px;
+      .tag {
+        width: 100%;
+        height: 110px;
+        line-height: 110px;
+        .iconfont {
+          float: left;
+          font-size: 40px;
+        }
+        .tag__content {
+          float: left;
+          margin-left: 30px;
+          width: 570px;
+          height: 110px;
+          font-size: 30px;
+          color: #1a1a1a;
+          border-bottom: 2px solid #efefef;
+          .tag__title {
+            float: left;
+          }
+          .tag__radio {
+            float: right;
+            margin-top: 35px;
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #d0d0d0;
+            border-radius: 40px;
+          }
+          .tag__radio--selected {
+            float: right;
+            margin-top: 35px;
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            border: 10px solid #ff7700;
+            border-radius: 40px;
+          }
+        }
+      }
+    }
+    .modal__btn--modal {
+      @include button;
+      position: absolute;
+      bottom: 25px;
+      left: 75px;
+    }
+  }
+}
