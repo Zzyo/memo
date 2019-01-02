@@ -7,7 +7,8 @@
     "build": "node build/commands/build.js",
     "build:dll": "webpack --progress -p --config ./build/webpack/webpack.dll.config.js",
     "dev": "cross-env NODE_ENV=development node ./server/app.js",
-    "start": "cross-env NODE_ENV=production node ./server/app.js"
+    "start": "cross-env NODE_ENV=production node ./server/app.js",
+    "restart": "scripty"
   },
   "author": "chenxiaojia",
   "license": "ISC",
@@ -18,7 +19,8 @@
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "koa-sslify": "^2.2.0",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "scripty": "^1.9.0"
   },
   "devDependencies": {
     "@types/react": "^16.7.17",
@@ -78,5 +80,8 @@
     "webpack-dev-server": "^3.1.10",
     "webpack-merge": "^4.1.5",
     "whatwg-fetch": "^3.0.0"
+  },
+  "scripty": {
+    "path": "./build/commands"
   }
 }
