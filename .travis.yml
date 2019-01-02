@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "8"
+script:
+  - git reset --hard origin/master
+  - git clean -f
+  - git pull origin master
+  - npm install --production
+  - pm2 restart all
