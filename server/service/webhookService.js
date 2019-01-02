@@ -1,6 +1,7 @@
 const { exec } = require('child_process');
 
 const postRestart = async () => {
+  console.log('execute restart command');
   const restart = exec('npm run restart');
   restart.stdout.on('data', (stats) => {
     process.stdout.write(`${stats.toString({
