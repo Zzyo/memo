@@ -4,7 +4,7 @@ module.exports = {
     script: 'server/app.js',
     instances: 'max',
     exec_mode: 'cluster',
-    watch: false,
+    watch: true,
     error_file: 'server/logs/app-err.log',
     out_file: 'server/logs/app-out.log',
     env: {
