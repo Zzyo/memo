@@ -32,6 +32,17 @@ const getFilesUtil = filenames => new Promise((resolve) => {
   });
 });
 
+// 查询单条记录工具
+const getRecordUtil = (filenames, id) => new Promise((resolve) => {
+  for (const filename of filenames) {
+    const data = JSON.parse(fs.readFileSync(path.join(prepath, filename), 'utf-8'));
+    if (data[id]) {
+      resolve(data[id]);
+      break;
+    }
+  }
+});
+
 // 查询单个文件工具
 const getFileUtil = filename => new Promise((resolve) => {
   const isExists = fs.existsSync(path.join(prepath, filename));
@@ -61,6 +72,7 @@ const insertRecordIntoFileUtil = (filename, file) => new Promise((resolve) => {
 
 module.exports = {
   getFilesUtil,
+  getRecordUtil,
   getFileUtil,
   insertRecordIntoFileUtil,
 };

@@ -10,6 +10,16 @@ const getRecords = async (ctx) => {
   };
 };
 
+// 获取单条记录
+const getRecord = async (ctx) => {
+  const { query } = ctx;
+  const record = await recordService.getRecord(query);
+  ctx.body = {
+    result: true,
+    data: record,
+  };
+};
+
 // 新增记录
 const postRecord = async (ctx) => {
   const { body } = ctx.request;
@@ -26,6 +36,7 @@ const putRecord = async (ctx) => {
 
 module.exports = {
   'GET /records': getRecords,
+  'GET /record': getRecord,
   'POST /record': postRecord,
   'PUT /record': putRecord,
 };

@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import 'whatwg-fetch';
 
 export default function(url: string, data: object = {}, method: string = 'GET') {
-  return new Promise((resolve: (value: MemoRecord[]) => void, reject) => {
+  return new Promise((resolve: (value: any) => void, reject) => {
     fetch(url, {
       method,
       body: method === 'GET' ? undefined : JSON.stringify(data),

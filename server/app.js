@@ -3,12 +3,12 @@ const https = require('https');
 const bodyParser = require('koa-bodyparser');
 const serve = require('koa-static');
 const enforceHttps = require('koa-sslify');
-const historyFallback = require('koa2-history-api-fallback');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
 const router2controller = require('./router2controller');
+const historyFallback = require('./middleware/historyFallbackMiddleware');
 const config = require('../config/index');
 
 const options = {
@@ -25,8 +25,8 @@ app.use(bodyParser());
 // 配置自动检查controller
 app.use(router2controller());
 
-if (env === 'development') {
-  // 开发环境，检查静态资源目录下是否有DllPlugin编译出来的文件
+if (env === 'development') { // 开发环境
+  // 检查静态资源目录下是否有DllPlugin编译出来的文件
   const isExists = fs.existsSync(`./${config.assetsRoot}/public/vendors.js`) && fs.existsSync(`./${config.assetsRoot}/public/vendors-manifest.json`);
   if (!isExists) {
     console.log(require('chalk').red('[Error]: 请先执行 npm run build:dll 生成vendors.js及vendors-manifest.json'));
@@ -55,26 +55,35 @@ if (env === 'development') {
       chunkModules: false,
     })}\n`);
   });
-} else {
-  // 生产环境，启动静态资源服务器
-  if (config.useAlioss) {
-    app.use(serve(path.resolve('server', 'views')));
-  } else {
-    app.use(serve(config.assetsRoot));
-  }
-
-  // 将http请求强制转换为https请求
-  app.use(enforceHttps());
+} else if (config.useAlioss) { // 生产环境，使用阿里云
+  // 启动静态资源服务器
+  app.use(serve(path.resolve('server', 'views')));
 
   // 刷新浏览器重定向，使所有浏览器操作都指向index.html
   app.use(historyFallback());
+
+  app.use(enforceHttps());
 
   // 启动后端服务器
   https.createServer(options, app.callback()).listen(config.port, (err) => {
     if (err) {
       return;
     }
-    console.log(`Https Server Listening at https://${config.host}:${config.port}`);
+    console.log(`Https Server Listening at https://${config.host}`);
+  });
+} else { // 生产环境，本地
+  // 刷新浏览器重定向，使所有浏览器操作都指向index.html
+  app.use(historyFallback());
+
+  // 启动静态资源服务器
+  app.use(serve(config.assetsRoot));
+
+  // 启动后端服务器
+  app.listen(config.port, (err) => {
+    if (err) {
+      return;
+    }
+    console.log(`Http Server Listening at http://${config.host}:${config.port}`);
   });
 }
 

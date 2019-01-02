@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { getFilesUtil, getFileUtil, insertRecordIntoFileUtil } = require('../utils/fileUtil');
+const { getFilesUtil, getRecordUtil, getFileUtil, insertRecordIntoFileUtil } = require('../utils/fileUtil');
 
 const getRecords = async (query) => {
   const keywords = query.keywords || '';
@@ -9,6 +9,13 @@ const getRecords = async (query) => {
   const files = await getFilesUtil(paths);
   const records = files.filter(file => file.content.indexOf(keywords) > -1);
   return records;
+};
+
+const getRecord = async (query) => {
+  const { id } = query;
+  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md');
+  const record = await getRecordUtil(paths, id);
+  return record;
 };
 
 const postRecord = async (body) => {
@@ -38,6 +45,7 @@ const putRecord = async (body) => {
 
 module.exports = {
   getRecords,
+  getRecord,
   postRecord,
   putRecord,
 };

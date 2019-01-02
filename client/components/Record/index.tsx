@@ -12,6 +12,7 @@ enum Status { Init, Pending, Done }
 interface State {
   status: Status;
   target: Tag;
+  editid: number;
   date: string;
   content: string;
   modalshow: boolean;
@@ -29,6 +30,7 @@ export default class Record extends React.Component<Props, State> {
 
   constructor(props: any) {
     super(props);
+    this.getId = this.getId.bind(this);
     this.changeContent = this.changeContent.bind(this);
     this.showmodal = this.showmodal.bind(this);
     this.changeTarget = this.changeTarget.bind(this);
@@ -37,6 +39,7 @@ export default class Record extends React.Component<Props, State> {
     this.state = {
       status: Status.Init,
       target: Tag.Unset,
+      editid: 0,
       date: '',
       content: '',
       modalshow: false,
@@ -45,7 +48,30 @@ export default class Record extends React.Component<Props, State> {
 
   public componentWillMount() {
     const { recordStore } = this.props;
-    if (recordStore.editid === 0) {
+    const id = this.getId();
+    if (id) {
+      recordStore.getRecord(id, (record) => {
+        const tag = record.tag;
+        let target;
+        if (tag === '') {
+          target = Tag.Unset;
+        } else if (tag === 'tour') {
+          target = Tag.Tour;
+        } else if (tag === 'personal') {
+          target = Tag.Personal;
+        } else if (tag === 'life') {
+          target = Tag.Life;
+        } else if (tag === 'work') {
+          target = Tag.Work;
+        }
+        this.setState({
+          editid: record.id,
+          date: record.date,
+          content: record.content,
+          target,
+        });
+      });
+    } else {
       const date = new Date();
       const y = date.getFullYear();
       const m = date.getMonth() + 1;
@@ -53,26 +79,19 @@ export default class Record extends React.Component<Props, State> {
       this.setState({
         date: `${y}-${m}-${d}`,
       });
-    } else {
-      const tag = recordStore.edittag;
-      let target;
-      if (tag === '') {
-        target = Tag.Unset;
-      } else if (tag === 'tour') {
-        target = Tag.Tour;
-      } else if (tag === 'personal') {
-        target = Tag.Personal;
-      } else if (tag === 'life') {
-        target = Tag.Life;
-      } else if (tag === 'work') {
-        target = Tag.Work;
-      }
-      this.setState({
-        target,
-        date: recordStore.editdate,
-        content: recordStore.editcontent,
-      });
     }
+  }
+
+  public getId() {
+    const search = location.search.substr(1);
+    if (search === '') {
+      return '';
+    }
+    const arr = search.split('&').filter((item) => item.substr(0, 3) === 'id=');
+    if (arr.length) {
+      return arr[0].substr(3);
+    }
+    return '';
   }
 
   public changeContent(event) {
@@ -104,9 +123,9 @@ export default class Record extends React.Component<Props, State> {
   }
 
   public saveRecord() { // 保存记录，根据editid是否为0判断是新增还是编辑
-    const { target, date, content } = this.state;
+    const { editid, target, date, content } = this.state;
     const { recordStore } = this.props;
-    const id = recordStore.editid === 0 ? recordStore.maxid + 1 : recordStore.editid;
+    const id = editid === 0 ? recordStore.maxid + 1 : editid;
     let tag;
     if (target === Tag.Unset) {
       tag = '';
@@ -127,7 +146,7 @@ export default class Record extends React.Component<Props, State> {
     this.setState({
       status: Status.Pending,
     }, () => {
-      if (recordStore.editid === 0) {
+      if (editid === 0) {
         recordStore.postRecord({ id, date, content, tag }, callback);
       } else {
         recordStore.putRecord({ id, date, content, tag }, callback);

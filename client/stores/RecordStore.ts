@@ -1,16 +1,8 @@
-import { action, observable, runInAction } from 'mobx';
+import { action, computed, observable, runInAction } from 'mobx';
 
 import fetch from '../utils/fetch';
 
 export default class RecordStore {
-
-  @observable public editid: number = 0; // 当前正在编辑的记录id，如果为新增记录，则值为0
-
-  @observable public editdate: string = ''; // 当前正在编辑的记录的日期
-
-  @observable public editcontent: string = ''; // 当前正在编辑的记录的内容
-
-  @observable public edittag: string = ''; // 当前正在编辑的记录的标签
 
   @observable public maxid: number = 0; // 当前记录最大的id，用来计算新增的记录id
 
@@ -25,18 +17,22 @@ export default class RecordStore {
     });
   }
 
+  @action
+  public async getRecord(id: string, callback: any) {
+    const record = await fetch(`/api/record?id=${id}`);
+    callback(record);
+  }
+
   @action.bound
   public async postRecord(record: MemoRecord, callback: any) {
     await fetch('/api/record', record, 'POST');
     this.updateMaxid(record.id);
-    this.resetRecord();
     callback();
   }
 
   @action.bound
   public async putRecord(record: MemoRecord, callback: any) {
     await fetch('/api/record', record, 'PUT');
-    this.resetRecord();
     callback();
   }
 
@@ -45,20 +41,4 @@ export default class RecordStore {
     this.maxid = maxid;
   }
 
-  @action.bound
-  public setRecord(record: MemoRecord, callback: any) {
-    this.editid = record.id;
-    this.editdate = record.date;
-    this.editcontent = record.content;
-    this.edittag = record.tag;
-    callback();
-  }
-
-  @action.bound
-  public resetRecord() {
-    this.editid = 0;
-    this.editdate = '';
-    this.editcontent = '';
-    this.edittag = '';
-  }
 }

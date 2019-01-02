@@ -43,14 +43,10 @@ export default class List extends React.Component<Props, {}> {
 
   public goToRecord(record: MemoRecord = null) {
     const { recordStore } = this.props;
-    const fn = () => {
-      this.context.router.history.push('/record');
-    };
     if (record) { // 编辑
-      recordStore.setRecord(record, fn);
+      this.context.router.history.push(`/record?id=${record.id}`);
     } else { // 新增
-      recordStore.resetRecord();
-      fn();
+      this.context.router.history.push(`/record`);
     }
   }
 
