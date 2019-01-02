@@ -56,11 +56,11 @@ if (env === 'development') { // 开发环境
     })}\n`);
   });
 } else if (config.useAlioss) { // 生产环境，使用阿里云
-  // 启动静态资源服务器
-  app.use(serve(path.resolve('server', 'views')));
-
   // 刷新浏览器重定向，使所有浏览器操作都指向index.html
   app.use(historyFallback());
+
+  // 启动静态资源服务器
+  app.use(serve(path.resolve('server', 'views')));
 
   app.use(enforceHttps());
 
