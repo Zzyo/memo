@@ -1,18 +1,11 @@
 const version = '1.0.1';
 const CACHE = `${version}::PWAsite`;
-const installFilesEssential = ['/manifest.json'];
-const installFilesDesirable = ['/logo.png'];
+const installFiles = ['/manifest.json'];
 
 // install static assets
 function installStaticFiles() {
   return caches.open(CACHE)
-    .then((cache) => {
-      // cache desirable files
-      cache.addAll(installFilesDesirable);
-
-      // cache essential files
-      return cache.addAll(installFilesEssential);
-    });
+    .then(cache => cache.addAll(installFiles));
 }
 
 // clear old caches
