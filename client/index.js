@@ -16,6 +16,22 @@ import List from './components/List/index.tsx';
 // 加载store
 import RecordStore from './stores/RecordStore';
 
+// 注册serviceWorker服务;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+  navigator.serviceWorker.addEventListener('message', (e) => {
+    if (e.data === 'sw.post') {
+      window.alert('无网不支持新增请求');
+    } else if (e.data === 'sw.put') {
+      window.alert('无网不支持修改请求');
+    } else if (e.data === 'sw.delete') {
+      window.alert('无网不支持删除请求');
+    } else {
+      window.alert(`获取资源${e.data}失败`);
+    }
+  });
+}
+
 const store = {
   recordStore: new RecordStore(),
 };

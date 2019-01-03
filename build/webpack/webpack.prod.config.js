@@ -83,7 +83,7 @@ module.exports = merge(require('./webpack.base'), ({
     new HtmlWebpackPlugin({
       template: path.resolve('public', 'index.html'),
       favicon: path.resolve('public', 'favicon.ico'),
-      title: 'a pwa memo',
+      title: '备忘录',
       path: config.useAlioss ? aliConfig.publicPath : '',
     }),
     new ExtractTextPlugin({ // 抽离出样式文件

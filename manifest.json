@@ -1,0 +1,16 @@
+{
+  "short_name"        : "备忘录",
+  "description"       : "A memo website implementing Progressive Web App technology.",
+  "start_url"         : "/",
+  "display"           : "standalone",
+  "orientation"       : "any",
+  "background_color"  : "#ACE",
+  "theme_color"       : "#ACE",
+  "icons": [
+		{
+      "src"           : "/public/favicon.ico",
+      "sizes"         : "16x16",
+      "type"          : "image/x-icon"
+    }
+	]
+}

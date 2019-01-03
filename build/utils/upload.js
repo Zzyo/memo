@@ -7,8 +7,6 @@ const config = require('../../config/index');
 const aliConfig = require('../../config/alioss');
 
 module.exports = () => {
-  console.log(chalk.blue('正在上传文件至阿里云oss'));
-
   const client = new OSS({
     region: aliConfig.region,
     accessKeyId: aliConfig.accessKeyId,
@@ -17,6 +15,9 @@ module.exports = () => {
   });
 
   const filePath = path.resolve(config.assetsRoot);
+
+  console.log(chalk.green(`正在上传文件至阿里云oss，文件目录${filePath}`));
+  console.log(chalk.yellow('------------------------'));
 
   function readDir(fPath) {
     fs.readdir(fPath, (err, files) => {
@@ -38,6 +39,7 @@ module.exports = () => {
               } else if (isFile) { // 文件上传
                 const name = filedir.slice(filePath.length + 1);
                 client.put(`${aliConfig.prefix}/${name}`, path.join(filePath, name)).then(() => {
+                  console.log(chalk.green(`文件上传成功：${aliConfig.publicPath}${name}`));
                   if (filename !== 'vendors-manifest.json' && filename !== 'vendors.js') {
                     fs.unlinkSync(filedir);
                   }

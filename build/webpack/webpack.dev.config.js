@@ -53,7 +53,7 @@ module.exports = merge(require('./webpack.base'), ({
     new HtmlWebpackPlugin({
       template: path.resolve('public', 'index.html'),
       favicon: path.resolve('public', 'favicon.ico'),
-      title: 'a pwa memo',
+      title: '备忘录',
       path: '',
     }),
     new webpack.NamedModulesPlugin(), // 用于启动 HMR 时可以显示模块的相对路径
