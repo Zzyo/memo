@@ -1,5 +1,19 @@
 const version = '1.0.0';
 const CACHE = `${version}::PWAsite`;
+const installFilesEssential = ['/manifest.json'];
+const installFilesDesirable = ['/favicon.ico'];
+
+// install static assets
+function installStaticFiles() {
+  return caches.open(CACHE)
+    .then((cache) => {
+      // cache desirable files
+      cache.addAll(installFilesDesirable);
+
+      // cache essential files
+      return cache.addAll(installFilesEssential);
+    });
+}
 
 // clear old caches
 function clearOldCaches() {
@@ -17,7 +31,8 @@ self.addEventListener('install', (event) => {
 
   // cache core files
   event.waitUntil(
-    self.skipWaiting(),
+    installStaticFiles()
+      .then(() => self.skipWaiting()),
   );
 });
 
