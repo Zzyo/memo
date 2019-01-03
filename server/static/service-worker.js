@@ -1,6 +1,6 @@
-const version = '1.0.4';
+const version = '1.0.5';
 const CACHE = `${version}::PWAsite`;
-const installFiles = ['/', '/api/records?keywords=', '/manifest.json'];
+const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 
 // install static assets
 function installStaticFiles() {
