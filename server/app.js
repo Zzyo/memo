@@ -60,7 +60,7 @@ if (env === 'development') { // 开发环境
   app.use(historyFallback());
 
   // 启动静态资源服务器
-  app.use(serve(path.resolve('server', 'views')));
+  app.use(serve(path.resolve('server', 'static')));
 
   app.use(enforceHttps());
 
