@@ -1,7 +1,7 @@
-const version = '1.0.0';
+const version = '1.0.1';
 const CACHE = `${version}::PWAsite`;
 const installFilesEssential = ['/manifest.json'];
-const installFilesDesirable = ['/favicon.ico'];
+const installFilesDesirable = ['/logo.png'];
 
 // install static assets
 function installStaticFiles() {
