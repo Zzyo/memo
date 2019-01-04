@@ -1,9 +1,9 @@
-const version = '1.0.7';
+const version = '1.0.8';
 const CACHE = `${version}::PWAsite`;
 const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 const HOST_NAME = location.host;
 const myHeaders = new Headers();
-myHeaders.append('origin', 'https://www.xiaojiachen.com');
+myHeaders.append('origin', `https://${HOST_NAME}`);
 
 // install static assets
 function installStaticFiles() {
@@ -22,15 +22,15 @@ function clearOldCaches() {
 }
 
 function isCORSRequest(url, host) {
-  return url.search(host) === -1;
+  return url.search(host) === 8;
 }
 
+// install static file
 self.addEventListener('message', (event) => {
   const { data } = event;
   if (data.name === 'fetch') {
     data.value.forEach((url) => {
       const request = new Request(url, { mode: 'cors', headers: myHeaders });
-      console.log(`before message fetch: ${url}`, request);
       caches.open(CACHE)
         .then(cache => cache.match(request)
           .then((response) => {
