@@ -78,7 +78,7 @@ self.addEventListener('fetch', (event) => {
             return response;
           }
           // make network request
-          return fetch(event.request, { mode: 'cors' })
+          return fetch(event.request, { mode: 'no-cors' })
             .then((newreq) => {
               console.log(`network fetch: ${url}`);
               if (newreq.ok) cache.put(event.request, newreq.clone());
