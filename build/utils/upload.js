@@ -32,8 +32,8 @@ module.exports = () => {
             } else {
               const isFile = stats.isFile(); // 文件
               const isDir = stats.isDirectory(); // 文件夹
-              if (filename === 'index.html') { // 将index.html移动到server/views目录下
-                fs.rename(filedir, path.resolve('server', 'views', 'index.html'));
+              if (filename === 'index.html') { // 将index.html移动到server/static目录下
+                fs.rename(filedir, path.resolve('server', 'static', 'index.html'));
               } else if (filename === '.DS_Store' || filename === 'report.html') { // 删除.DS_Store和report.html
                 fs.unlinkSync(filedir);
               } else if (isFile) { // 文件上传

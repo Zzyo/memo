@@ -1,4 +1,4 @@
-const version = '1.0.6';
+const version = '1.0.7';
 const CACHE = `${version}::PWAsite`;
 const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 const HOST_NAME = location.host;
