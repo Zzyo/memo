@@ -1,9 +1,11 @@
 const version = '1.0.8';
 const CACHE = `${version}::PWAsite`;
 const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
-const HOST_NAME = location.host;
+const HOST_NAME = 'www.xiaojiachen.com';
 const myHeaders = new Headers();
 myHeaders.append('origin', `https://${HOST_NAME}`);
+
+console.log('myHeaders', myHeaders);
 
 // install static assets
 function installStaticFiles() {
@@ -22,7 +24,7 @@ function clearOldCaches() {
 }
 
 function isCORSRequest(url, host) {
-  return url.search(host) === 8;
+  return url.search(host) !== 8;
 }
 
 // install static file
