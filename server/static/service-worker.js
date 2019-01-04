@@ -1,6 +1,7 @@
 const version = '1.0.6';
 const CACHE = `${version}::PWAsite`;
 const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
+const HOST_NAME = location.host;
 
 // install static assets
 function installStaticFiles() {
@@ -16,6 +17,10 @@ function clearOldCaches() {
         .filter(key => key !== CACHE)
         .map(key => caches.delete(key)),
     ));
+}
+
+function isCORSRequest(url, host) {
+  return url.search(host) === -1;
 }
 
 // application installation
@@ -68,9 +73,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const request = isCORSRequest(url, HOST_NAME) ? new Request(url, { mode: 'cors' }) : event.request;
+
   event.respondWith(
     caches.open(CACHE)
-      .then(cache => cache.match(event.request)
+      .then(cache => cache.match(request)
         .then((response) => {
           if (response) {
             // return cached file
@@ -78,7 +85,7 @@ self.addEventListener('fetch', (event) => {
             return response;
           }
           // make network request
-          return fetch(event.request, { mode: 'no-cors' })
+          return fetch(request)
             .then((newreq) => {
               console.log(`network fetch: ${url}`);
               if (newreq.ok) cache.put(event.request, newreq.clone());
