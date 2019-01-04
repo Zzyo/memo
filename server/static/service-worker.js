@@ -28,6 +28,7 @@ self.addEventListener('message', (event) => {
   if (data.name === 'fetch') {
     data.value.forEach((url) => {
       const request = new Request(url, { mode: 'cors' });
+      console.log(`before message fetch: ${url}`, request);
       caches.open(CACHE)
         .then(cache => cache.match(request)
           .then((response) => {
