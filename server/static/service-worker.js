@@ -55,7 +55,6 @@ self.addEventListener('install', (event) => {
   // cache core files
   event.waitUntil(
     installStaticFiles()
-      .then(() => installFetchFiles())
       .then(() => self.skipWaiting()),
   );
 });
@@ -68,6 +67,7 @@ self.addEventListener('activate', (event) => {
   // delete old caches
   event.waitUntil(
     clearOldCaches()
+      .then(() => installFetchFiles())
       .then(() => self.clients.claim()),
   );
 });
