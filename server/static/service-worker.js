@@ -1,15 +1,20 @@
 const version = '1.0.8';
 const CACHE = `${version}::PWAsite`;
-const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 const HOST_NAME = 'www.xiaojiachen.com';
 const myHeaders = new Headers();
 myHeaders.append('origin', `https://${HOST_NAME}`);
+let installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 
 console.log('myHeaders', myHeaders);
 
 // install static assets
 function installStaticFiles() {
-  return caches.open(CACHE)
+  return fetch('/assets.txt').then(res => res.text()).then((resp) => {
+    const str = resp.substr(0, resp.length - 7);
+    const arr = str.split('|split|');
+    installFiles = installFiles.concat(arr);
+    console.log('installFiles', installFiles);
+  }).then(() => caches.open(CACHE))
     .then(cache => cache.addAll(installFiles));
 }
 

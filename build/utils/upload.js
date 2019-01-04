@@ -6,6 +6,10 @@ const chalk = require('chalk');
 const config = require('../../config/index');
 const aliConfig = require('../../config/alioss');
 
+const assetspath = path.resolve('server', 'static', 'assets.txt');
+
+fs.writeFileSync(assetspath, '');
+
 module.exports = () => {
   const client = new OSS({
     region: aliConfig.region,
@@ -38,6 +42,7 @@ module.exports = () => {
                 fs.unlinkSync(filedir);
               } else if (isFile) { // 文件上传
                 const name = filedir.slice(filePath.length + 1);
+                fs.appendFileSync(assetspath, `${aliConfig.publicPath}${name}|split|`);
                 client.put(`${aliConfig.prefix}/${name}`, path.join(filePath, name)).then(() => {
                   console.log(chalk.green(`文件上传成功：${aliConfig.publicPath}${name}`));
                   if (filename !== 'vendors-manifest.json' && filename !== 'vendors.js') {

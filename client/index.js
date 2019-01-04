@@ -31,15 +31,6 @@ if ('serviceWorker' in navigator) {
       window.alert(`获取资源${e.data}失败`);
     }
   });
-  if (serviceWorker.controller) {
-    const scripts = Array.prototype.slice.call(document.scripts).map(e => e.src);
-    const styles = Array.prototype.slice.call(document.styleSheets).map(e => e.href);
-    const fetchArr = scripts.concat(styles);
-    serviceWorker.controller.postMessage({
-      name: 'fetch',
-      value: fetchArr,
-    });
-  }
 }
 
 const store = {
