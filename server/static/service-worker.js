@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
   const { data } = event;
   if (data.name === 'fetch') {
     data.value.forEach((url) => {
-      const request = new Request(url, { mode: 'cors' });
+      const request = new Request(url, { mode: 'cors', credentials: 'include' });
       console.log(`before message fetch: ${url}`, request);
       caches.open(CACHE)
         .then(cache => cache.match(request)
@@ -95,7 +95,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  const request = isCORSRequest(url, HOST_NAME) ? new Request(url, { mode: 'cors' }) : event.request;
+  const request = isCORSRequest(url, HOST_NAME) ? new Request(url, { mode: 'cors', credentials: 'include' }) : event.request;
 
   event.respondWith(
     caches.open(CACHE)
