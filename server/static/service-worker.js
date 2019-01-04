@@ -1,4 +1,4 @@
-const version = '1.0.5';
+const version = '1.0.6';
 const CACHE = `${version}::PWAsite`;
 const installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
 
@@ -78,7 +78,7 @@ self.addEventListener('fetch', (event) => {
             return response;
           }
           // make network request
-          return fetch(event.request)
+          return fetch(event.request, { mode: 'cors' })
             .then((newreq) => {
               console.log(`network fetch: ${url}`);
               if (newreq.ok) cache.put(event.request, newreq.clone());
