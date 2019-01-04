@@ -23,25 +23,26 @@ function isCORSRequest(url, host) {
   return url.search(host) === -1;
 }
 
-// self.addEventListener('message', (event) => {
-//   const { data } = event;
-//   if (data.name === 'fetch') {
-//     data.value.forEach((url) => {
-//       const request = new Request(url, { mode: 'cors' });
-//       caches.open(CACHE)
-//         .then(cache => cache.match(request)
-//           .then((response) => {
-//             if (!response) {
-//               fetch(request)
-//                 .then((newreq) => {
-//                   if (newreq.ok) cache.put(request, newreq.clone());
-//                   return newreq;
-//                 });
-//             }
-//           }));
-//     });
-//   }
-// });
+self.addEventListener('message', (event) => {
+  const { data } = event;
+  if (data.name === 'fetch') {
+    data.value.forEach((url) => {
+      const request = new Request(url, { mode: 'cors' });
+      caches.open(CACHE)
+        .then(cache => cache.match(request)
+          .then((response) => {
+            if (!response) {
+              fetch(request)
+                .then((newreq) => {
+                  console.log(`message fetch: ${url}`);
+                  if (newreq.ok) cache.put(request, newreq.clone());
+                  return newreq;
+                });
+            }
+          }));
+    });
+  }
+});
 
 // application installation
 self.addEventListener('install', (event) => {
