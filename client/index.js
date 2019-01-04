@@ -18,8 +18,9 @@ import RecordStore from './stores/RecordStore';
 
 // 注册serviceWorker服务;
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./service-worker.js');
-  navigator.serviceWorker.addEventListener('message', (e) => {
+  const { serviceWorker } = navigator;
+  serviceWorker.register('./service-worker.js');
+  serviceWorker.addEventListener('message', (e) => {
     if (e.data === 'sw.post') {
       window.alert('无网不支持新增请求');
     } else if (e.data === 'sw.put') {
@@ -30,6 +31,13 @@ if ('serviceWorker' in navigator) {
       window.alert(`获取资源${e.data}失败`);
     }
   });
+  // const scripts = Array.prototype.slice.call(document.scripts).map(e => e.src);
+  // const styles = Array.prototype.slice.call(document.styleSheets).map(e => e.href);
+  // const fetchArr = scripts.concat(styles);
+  // serviceWorker.controller.postMessage({
+  //   name: 'fetch',
+  //   value: fetchArr,
+  // });
 }
 
 const store = {
