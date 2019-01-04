@@ -1,21 +1,37 @@
-const version = '1.0.8';
+const version = '1.0.9';
 const CACHE = `${version}::PWAsite`;
 const HOST_NAME = 'www.xiaojiachen.com';
+const staticFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
+
 const myHeaders = new Headers();
 myHeaders.append('origin', `https://${HOST_NAME}`);
-let installFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
-
-console.log('myHeaders', myHeaders);
 
 // install static assets
 function installStaticFiles() {
+  return caches.open(CACHE).then(cache => cache.addAll(staticFiles));
+}
+
+// install fetch assets
+function installFetchFiles() {
   return fetch('/assets.txt').then(res => res.text()).then((resp) => {
     const str = resp.substr(0, resp.length - 7);
-    const arr = str.split('|split|');
-    installFiles = installFiles.concat(arr);
-    console.log('installFiles', installFiles);
-  }).then(() => caches.open(CACHE))
-    .then(cache => cache.addAll(installFiles));
+    const fetchFiles = str.split('|split|');
+    fetchFiles.forEach((url) => {
+      const request = new Request(url, { mode: 'cors', headers: myHeaders });
+      caches.open(CACHE)
+        .then(cache => cache.match(request)
+          .then((response) => {
+            if (!response) {
+              fetch(request)
+                .then((newreq) => {
+                  console.log(`message fetch: ${url}`);
+                  if (newreq.ok) cache.put(request, newreq.clone());
+                  return newreq;
+                });
+            }
+          }));
+    });
+  });
 }
 
 // clear old caches
@@ -32,28 +48,6 @@ function isCORSRequest(url, host) {
   return url.search(host) !== 8;
 }
 
-// install static file
-self.addEventListener('message', (event) => {
-  const { data } = event;
-  if (data.name === 'fetch') {
-    data.value.forEach((url) => {
-      const request = new Request(url, { mode: 'cors', headers: myHeaders });
-      caches.open(CACHE)
-        .then(cache => cache.match(request)
-          .then((response) => {
-            if (!response) {
-              fetch(request)
-                .then((newreq) => {
-                  console.log(`message fetch: ${url}`);
-                  if (newreq.ok) cache.put(request, newreq.clone());
-                  return newreq;
-                });
-            }
-          }));
-    });
-  }
-});
-
 // application installation
 self.addEventListener('install', (event) => {
   console.log('service worker: install');
@@ -61,6 +55,7 @@ self.addEventListener('install', (event) => {
   // cache core files
   event.waitUntil(
     installStaticFiles()
+      .then(() => installFetchFiles())
       .then(() => self.skipWaiting()),
   );
 });
