@@ -17,7 +17,7 @@ function installFetchFiles() {
     const str = resp.substr(0, resp.length - 7);
     const fetchFiles = str.split('|split|');
     fetchFiles.forEach((url) => {
-      const request = new Request(url, { mode: 'cors', headers: myHeaders });
+      const request = new Request(url, { mode: 'cors', cache: 'no-store', headers: myHeaders });
       caches.open(CACHE)
         .then(cache => cache.match(request)
           .then((response) => {
@@ -55,6 +55,7 @@ self.addEventListener('install', (event) => {
   // cache core files
   event.waitUntil(
     installStaticFiles()
+      .then(() => installFetchFiles())
       .then(() => self.skipWaiting()),
   );
 });
@@ -67,7 +68,6 @@ self.addEventListener('activate', (event) => {
   // delete old caches
   event.waitUntil(
     clearOldCaches()
-      .then(() => installFetchFiles())
       .then(() => self.clients.claim()),
   );
 });
