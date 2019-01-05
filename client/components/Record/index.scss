@@ -28,6 +28,15 @@
       vertical-align: -3px;
     }
   }
+  .header__delete {
+    float: right;
+    margin-left: 12px;
+    i {
+      font-size: 44px;
+      font-weight: 600;
+      color: #f58300;
+    }
+  }
   .header__date {
     float: right;
   }

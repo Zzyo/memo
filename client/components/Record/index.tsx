@@ -36,6 +36,7 @@ export default class Record extends React.Component<Props, State> {
     this.changeTarget = this.changeTarget.bind(this);
     this.hidemodal = this.hidemodal.bind(this);
     this.saveRecord = this.saveRecord.bind(this);
+    this.deleteRecord = this.deleteRecord.bind(this);
     this.state = {
       status: Status.Init,
       target: Tag.Unset,
@@ -154,8 +155,19 @@ export default class Record extends React.Component<Props, State> {
     });
   }
 
+  public deleteRecord() {
+    const { editid, date } = this.state;
+    const { recordStore } = this.props;
+    const callback = () => {
+      this.setState({
+        status: Status.Done,
+      });
+    };
+    recordStore.deleteRecord(editid, date, callback);
+  }
+
   public render() {
-    const { status, target, date, content, modalshow } = this.state;
+    const { editid, status, target, date, content, modalshow } = this.state;
     if (status === Status.Done) {
       return <Redirect to="/"/>;
     }
@@ -177,6 +189,9 @@ export default class Record extends React.Component<Props, State> {
         <div className="header">
           <div className="header__target" onClick={this.showmodal}>
             {header()}
+          </div>
+          <div className="header__delete" style={{display: editid === 0 ? 'none' : ''}} onClick={this.deleteRecord}>
+            <i className="iconfont icon-delete"/>
           </div>
           <div className="header__date">{date}</div>
         </div>

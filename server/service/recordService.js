@@ -5,7 +5,7 @@ const { getFilesUtil, getRecordUtil, getFileUtil, insertRecordIntoFileUtil } = r
 
 const getRecords = async (query) => {
   const keywords = query.keywords || '';
-  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md');
+  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md' && name !== '.DS_Store');
   const files = await getFilesUtil(paths);
   const records = files.filter(file => file.content.indexOf(keywords) > -1);
   return records;
@@ -13,7 +13,7 @@ const getRecords = async (query) => {
 
 const getRecord = async (query) => {
   const { id } = query;
-  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md');
+  const paths = fs.readdirSync(path.resolve('server', 'records')).filter(name => name !== 'README.md' && name !== '.DS_Store');
   const record = await getRecordUtil(paths, id);
   return record;
 };
@@ -43,9 +43,26 @@ const putRecord = async (body) => {
   return result;
 };
 
+const deleteRecord = async (body) => {
+  const { id, date } = body;
+  const filename = `${date}.json`;
+  const file = await getFileUtil(filename);
+  if (file[String(id)]) {
+    if (Object.keys(file).length === 1) {
+      fs.unlinkSync(path.resolve('server', 'records', filename));
+    } else {
+      delete file[String(id)];
+      const result = await insertRecordIntoFileUtil(filename, file);
+      return result;
+    }
+  }
+  return true;
+};
+
 module.exports = {
   getRecords,
   getRecord,
   postRecord,
   putRecord,
+  deleteRecord,
 };

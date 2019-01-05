@@ -34,9 +34,17 @@ const putRecord = async (ctx) => {
   ctx.body = { result };
 };
 
+// 修改记录
+const deleteRecord = async (ctx) => {
+  const { body } = ctx.request;
+  const result = await recordService.deleteRecord(body);
+  ctx.body = { result };
+};
+
 module.exports = {
   'GET /records': getRecords,
   'GET /record': getRecord,
   'POST /record': postRecord,
   'PUT /record': putRecord,
+  'DELETE /record': deleteRecord,
 };

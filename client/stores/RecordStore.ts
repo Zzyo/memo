@@ -37,6 +37,12 @@ export default class RecordStore {
   }
 
   @action.bound
+  public async deleteRecord(id: number, date: string, callback: any) {
+    await fetch('/api/record', { id, date }, 'DELETE');
+    callback();
+  }
+
+  @action.bound
   public updateMaxid(maxid: number) {
     this.maxid = maxid;
   }

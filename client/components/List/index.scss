@@ -27,17 +27,16 @@
   }
   .record {
     position: relative;
-    padding: 0 50px;
+    padding: 18px 50px 0;
     width: 100%;
-    height: 100px;
+    height: 118px;
     .iconfont {
       position: absolute;
-      top: 6px;
+      top: 24px;
       left: 10px;
       font-size: 30px;
     }
     .record__content {
-      margin-top: 18px;
       line-height: 44px;
       font-size: 30px;
       color: #0e0e0e;
@@ -46,7 +45,7 @@
       text-overflow: ellipsis;
     }
     .record__date {
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 26px;
       color: #959595;
     }
@@ -60,6 +59,9 @@
       height: 3px;
       background: #f2f2f2;
       transform: scale(0.5);
+    }
+    &:active {
+      background: #f2f2f2;
     }
   }
 }
