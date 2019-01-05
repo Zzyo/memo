@@ -1,4 +1,4 @@
-const version = '1.0.9';
+const version = '1.0.10';
 const CACHE = `${version}::PWAsite`;
 const HOST_NAME = 'www.xiaojiachen.com';
 const staticFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
@@ -111,7 +111,7 @@ self.addEventListener('fetch', (event) => {
     caches.open(CACHE)
       .then(cache => cache.match(request)
         .then((response) => {
-          if (response && offline) {
+          if (response && (offline || isCORSRequest(url, HOST_NAME))) {
             // return cached file
             console.log(`cache fetch: ${url}`);
             return response;
