@@ -85,6 +85,7 @@ self.addEventListener('fetch', (event) => {
   const { url, method } = event.request;
   const offline = !navigator.onLine;
 
+  console.log('fetch', url, method);
   // abandon non-GET requests
   if (offline && method === 'POST') {
     postMessage('sw.post');
@@ -105,7 +106,7 @@ self.addEventListener('fetch', (event) => {
     caches.open(CACHE)
       .then(cache => cache.match(request)
         .then((response) => {
-          if (response) {
+          if (response && offline) {
             // return cached file
             console.log(`cache fetch: ${url}`);
             return response;
