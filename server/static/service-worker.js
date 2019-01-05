@@ -85,18 +85,23 @@ self.addEventListener('fetch', (event) => {
   const { url, method } = event.request;
   const offline = !navigator.onLine;
 
-  console.log('fetch', url, method);
   // abandon non-GET requests
-  if (offline && method === 'POST') {
-    postMessage('sw.post');
+  if (method === 'POST') {
+    if (offline) {
+      postMessage('sw.post');
+    }
     return;
   }
-  if (offline && method === 'PUT') {
-    postMessage('sw.put');
+  if (method === 'PUT') {
+    if (offline) {
+      postMessage('sw.put');
+    }
     return;
   }
-  if (offline && method === 'DELETE') {
-    postMessage('sw.delete');
+  if (method === 'DELETE') {
+    if (offline) {
+      postMessage('sw.delete');
+    }
     return;
   }
 
