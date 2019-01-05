@@ -95,6 +95,8 @@ self.addEventListener('fetch', (event) => {
   if (method === 'PUT') {
     if (offline) {
       postMessage('sw.put');
+    } else {
+      console.log(event.request);
     }
     return;
   }
