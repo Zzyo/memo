@@ -50,9 +50,9 @@ function isCORSRequest(url, host) {
 
 // cache get method
 function cacheGetMethod(req) {
-  const { referrer } = req;
+  const { referrer, referrerPolicy } = req;
   const fetchApi = `/api/record?${referrer.split('?')[1]}`;
-  const request = new Request(fetchApi);
+  const request = new Request(fetchApi, { referrer, referrerPolicy });
   console.log('cache', request);
   caches.open(CACHE)
     .then((cache) => {
