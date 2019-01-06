@@ -1,4 +1,4 @@
-const version = '1.0.10';
+const version = '1.0.11';
 const CACHE = `${version}::PWAsite`;
 const HOST_NAME = 'www.xiaojiachen.com';
 const staticFiles = ['/', '/api/records?keywords=', '/images/logo152.png', '/manifest.json'];
@@ -53,6 +53,7 @@ function cacheGetMethod(req) {
   const { referrer } = req;
   const fetchApi = `/api/record?${referrer.split('?')[1]}`;
   const request = new Request(fetchApi);
+  console.log('cache', request);
   caches.open(CACHE)
     .then((cache) => {
       fetch(request)
@@ -125,6 +126,7 @@ self.addEventListener('fetch', (event) => {
 
   const request = isCORSRequest(url, HOST_NAME) ? new Request(url, { mode: 'cors', headers: myHeaders }) : event.request;
 
+  console.log('event.request', request);
   event.respondWith(
     caches.open(CACHE)
       .then(cache => cache.match(request)
