@@ -49,9 +49,20 @@ function isCORSRequest(url, host) {
 }
 
 // cache get method
-// function cacheGetMethod(req) {
-
-// }
+function cacheGetMethod(req) {
+  const { referrer } = req;
+  const fetchApi = `/api/record?${referrer.split('?')[1]}`;
+  const request = new Request(fetchApi);
+  caches.open(CACHE)
+    .then((cache) => {
+      fetch(request)
+        .then((newreq) => {
+          console.log(`cache get method: ${fetchApi}`);
+          if (newreq.ok) cache.put(request, newreq.clone());
+          return newreq;
+        });
+    });
+}
 
 // application installation
 self.addEventListener('install', (event) => {
@@ -101,8 +112,7 @@ self.addEventListener('fetch', (event) => {
     if (offline) {
       postMessage('sw.put');
     } else {
-      console.log(event, event.request);
-      // cacheGetMethod(event);
+      cacheGetMethod(event.request);
     }
     return;
   }
