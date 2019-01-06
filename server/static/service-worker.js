@@ -48,6 +48,11 @@ function isCORSRequest(url, host) {
   return url.search(host) !== 8;
 }
 
+// cache get method
+// function cacheGetMethod(req) {
+
+// }
+
 // application installation
 self.addEventListener('install', (event) => {
   console.log('service worker: install');
@@ -95,6 +100,9 @@ self.addEventListener('fetch', (event) => {
   if (method === 'PUT') {
     if (offline) {
       postMessage('sw.put');
+    } else {
+      console.log(event, event.request);
+      // cacheGetMethod(event);
     }
     return;
   }
