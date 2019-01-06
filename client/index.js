@@ -37,7 +37,7 @@ const store = {
   recordStore: new RecordStore(),
 };
 
-// 生产懒加载方法
+// 生成懒加载组件
 const generateLazyComponent = el => () => (
   <Bundle load={el}>
     {Component => <Component />}

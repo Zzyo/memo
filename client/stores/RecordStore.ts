@@ -1,4 +1,4 @@
-import { action, computed, observable, runInAction } from 'mobx';
+import { action, observable, runInAction } from 'mobx';
 
 import fetch from '../utils/fetch';
 

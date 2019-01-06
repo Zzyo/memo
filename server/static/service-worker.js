@@ -53,7 +53,6 @@ function cacheGetMethod(req) {
   const { referrer, referrerPolicy } = req;
   const fetchApi = `/api/record?${referrer.split('?')[1]}`;
   const request = new Request(fetchApi, { referrer, referrerPolicy });
-  console.log('cache', request);
   caches.open(CACHE)
     .then((cache) => {
       fetch(request)
