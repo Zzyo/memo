@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
-const router2controller = require('./router2controller');
+const router2controller = require('./middleware/routerToControllerMiddleware');
 const historyFallback = require('./middleware/historyFallbackMiddleware');
 const config = require('../config/index');
 

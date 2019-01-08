@@ -33,7 +33,7 @@ function addControllers(route, dir) {
 }
 
 module.exports = (dir) => {
-  const controllersDir = dir || 'controller';
+  const controllersDir = dir || '../controller';
   addControllers(router, controllersDir);
   return router.routes();
 };
