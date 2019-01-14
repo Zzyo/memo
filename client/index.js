@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter, Route } from 'react-router-dom';
-import { Provider } from 'mobx-react';
+import { Provider } from 'react-redux';
 
 // 倒入字体图标
 import './iconfont/iconfont.css';
@@ -13,8 +13,10 @@ import Bundle from './bundle';
 // 同步引入
 import List from './components/List/index.tsx';
 
-// 加载store
-import RecordStore from './stores/RecordStore';
+// 加载统一store
+import configureStore from './redux/store/configureStore';
+
+const store = configureStore();
 
 // 注册serviceWorker服务;
 if ('serviceWorker' in navigator) {
@@ -33,10 +35,6 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-const store = {
-  recordStore: new RecordStore(),
-};
-
 // 生成懒加载组件
 const generateLazyComponent = el => () => (
   <Bundle load={el}>
@@ -45,7 +43,7 @@ const generateLazyComponent = el => () => (
 );
 
 ReactDOM.render(
-  <Provider {...store}>
+  <Provider store={store}>
     <BrowserRouter basename="/">
       <div>
         <Route exact path="/" component={List} />

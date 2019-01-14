@@ -1,44 +1,55 @@
 import * as React from 'react';
 import * as PropTypes from 'prop-types';
-
-import { inject, observer } from 'mobx-react';
+import { connect } from 'react-redux';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/map';
 
 import './index.scss';
-import RecordStore from '../../stores/RecordStore';
+import * as action from '../../redux/actions/record';
 
 interface Props {
-  recordStore: RecordStore;
+  maxid: number;
+  dispatch: any;
 }
 
-@inject('recordStore')
-@observer
-export default class List extends React.Component<Props, {}> {
+interface State {
+  records: MemoRecord[];
+}
+
+class List extends React.Component<Props, State> {
 
   public static contextTypes = {
     router: PropTypes.object,
   };
 
+  public state: State; // state不再是readonly
+
   constructor(props: any, context: any) {
     super(props, context);
     this.goToRecord = this.goToRecord.bind(this);
+    this.state = {
+      records: [],
+    };
   }
 
   public componentWillMount() {
-    const { recordStore } = this.props;
-    recordStore.fetchRecords();
+    const { dispatch } = this.props;
+    dispatch(action.getRecords('', (records) => {
+      this.setState({ records });
+    }));
   }
 
   public componentDidMount() {
-    const { recordStore } = this.props;
+    const { dispatch } = this.props;
     const searchInput = document.querySelector('#searchInput');
     Observable.fromEvent(searchInput, 'input')
       .debounceTime(200)
       .map((event: any) => event.target.value)
-      .subscribe((value) => recordStore.fetchRecords(value));
+      .subscribe((value) => dispatch(action.getRecords(value, (records) => {
+        this.setState({ records });
+      })));
   }
 
   public goToRecord(record: MemoRecord = null) {
@@ -50,13 +61,13 @@ export default class List extends React.Component<Props, {}> {
   }
 
   public render() {
-    const { recordStore } = this.props;
+    const { records } = this.state;
     const colorMap = new Map();
     colorMap.set('tour', 'yellow');
     colorMap.set('personal', 'blue');
     colorMap.set('life', 'green');
     colorMap.set('work', 'red');
-    const recordBlock = recordStore.records.map((item: MemoRecord) => {
+    const recordBlock = records.map((item: MemoRecord) => {
       return (
         <div className="record" key={item.id} onClick={() => this.goToRecord(item)}>
           {item.tag === '' ? null : <i className={`iconfont icon-tag icon--${colorMap.get(item.tag)}`}/>}
@@ -83,3 +94,11 @@ export default class List extends React.Component<Props, {}> {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    maxid: state.rootReducer.record.maxid,
+  };
+}
+
+export default connect(mapStateToProps)(List);

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { inject, observer } from 'mobx-react';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import './index.scss';
-import RecordStore from '../../stores/RecordStore';
+import * as action from '../../redux/actions/record';
 
 enum Tag { Unset, Tour, Personal, Life, Work }
 
@@ -19,12 +19,11 @@ interface State {
 }
 
 interface Props {
-  recordStore: RecordStore;
+  maxid: number;
+  dispatch: any;
 }
 
-@inject('recordStore')
-@observer
-export default class Record extends React.Component<Props, State> {
+class Record extends React.Component<Props, State> {
 
   public state: State; // state不再是readonly
 
@@ -48,10 +47,10 @@ export default class Record extends React.Component<Props, State> {
   }
 
   public componentWillMount() {
-    const { recordStore } = this.props;
+    const { dispatch } = this.props;
     const id = this.getId();
     if (id) {
-      recordStore.getRecord(id, (record) => {
+      dispatch(action.getRecord(id, (record) => {
         const tag = record.tag;
         let target;
         if (tag === '') {
@@ -71,7 +70,7 @@ export default class Record extends React.Component<Props, State> {
           content: record.content,
           target,
         });
-      });
+      }));
     } else {
       const date = new Date();
       const y = date.getFullYear();
@@ -125,8 +124,8 @@ export default class Record extends React.Component<Props, State> {
 
   public saveRecord() { // 保存记录，根据editid是否为0判断是新增还是编辑
     const { editid, target, date, content } = this.state;
-    const { recordStore } = this.props;
-    const id = editid === 0 ? recordStore.maxid + 1 : editid;
+    const { dispatch, maxid } = this.props;
+    const id = editid === 0 ? maxid + 1 : editid;
     let tag;
     if (target === Tag.Unset) {
       tag = '';
@@ -148,22 +147,22 @@ export default class Record extends React.Component<Props, State> {
       status: Status.Pending,
     }, () => {
       if (editid === 0) {
-        recordStore.postRecord({ id, date, content, tag }, callback);
+        dispatch(action.postRecord({ id, date, content, tag }, callback));
       } else {
-        recordStore.putRecord({ id, date, content, tag }, callback);
+        dispatch(action.putRecord({ id, date, content, tag }, callback));
       }
     });
   }
 
   public deleteRecord() {
     const { editid, date } = this.state;
-    const { recordStore } = this.props;
+    const { dispatch } = this.props;
     const callback = () => {
       this.setState({
         status: Status.Done,
       });
     };
-    recordStore.deleteRecord(editid, date, callback);
+    dispatch(action.deleteRecord(editid, date, callback));
   }
 
   public render() {
@@ -257,3 +256,11 @@ export default class Record extends React.Component<Props, State> {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    maxid: state.rootReducer.record.maxid,
+  };
+}
+
+export default connect(mapStateToProps)(Record);
