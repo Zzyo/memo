@@ -10,7 +10,7 @@ module.exports = {
     'react-router-dom',
     'redux',
     'react-redux',
-    'redux-thunk',
+    'redux-observable',
     'prop-types',
     'regenerator-runtime',
     'whatwg-fetch',
