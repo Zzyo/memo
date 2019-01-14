@@ -1,17 +1,20 @@
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import createSagaMiddleware from 'redux-saga';
 
 import rootReducer from '../reducers/index';
+import rootSaga from '../sagas/index';
+
+const sagaMiddleware = createSagaMiddleware();
 
 export default function configureStore() {
   const store = createStore(
     combineReducers({
       rootReducer,
     }),
-    compose(
-      applyMiddleware(thunkMiddleware),
-      window.devToolsExtension ? window.devToolsExtension() : f => f,
-    ),
+    applyMiddleware(sagaMiddleware),
   );
+
+  sagaMiddleware.run(rootSaga);
+
   return store;
 }
