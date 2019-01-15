@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 import './index.scss';
 import * as action from '../../redux/actions/record';
+import fetch from '../../utils/fetch';
 
 enum Tag { Unset, Tour, Personal, Life, Work }
 
@@ -47,10 +48,9 @@ class Record extends React.Component<Props, State> {
   }
 
   public componentWillMount() {
-    const { dispatch } = this.props;
     const id = this.getId();
     if (id) {
-      dispatch(action.getRecord(id, (record) => {
+      fetch(`/api/record?id=${id}`).then((record) => {
         const tag = record.tag;
         let target;
         if (tag === '') {
@@ -70,7 +70,7 @@ class Record extends React.Component<Props, State> {
           content: record.content,
           target,
         });
-      }));
+      });
     } else {
       const date = new Date();
       const y = date.getFullYear();
@@ -149,20 +149,19 @@ class Record extends React.Component<Props, State> {
       if (editid === 0) {
         dispatch(action.postRecord({ id, date, content, tag }, callback));
       } else {
-        dispatch(action.putRecord({ id, date, content, tag }, callback));
+        fetch('/api/record', { id, date, content, tag }, 'PUT').then(callback);
       }
     });
   }
 
   public deleteRecord() {
     const { editid, date } = this.state;
-    const { dispatch } = this.props;
     const callback = () => {
       this.setState({
         status: Status.Done,
       });
     };
-    dispatch(action.deleteRecord(editid, date, callback));
+    fetch('/api/record', { id: editid, date }, 'DELETE').then(callback);
   }
 
   public render() {
