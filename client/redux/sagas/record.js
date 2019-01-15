@@ -19,26 +19,8 @@ function* postRecord({ record, callback }) {
   yield put(actions.postRecordSuccess(record.id));
 }
 
-function* getRecord({ id, callback }) {
-  const record = yield fetch(`/api/record?id=${id}`);
-  callback(record);
-}
-
-function* putRecord({ record, callback }) {
-  yield fetch('/api/record', record, 'PUT');
-  callback();
-}
-
-function* deleteRecord({ id, date, callback }) {
-  yield fetch('/api/record', { id, date }, 'DELETE');
-  callback();
-}
-
 // wacther saga
 export default function* watchRecord() {
   yield takeEvery(types.GET_RECORDS, getRecords);
   yield takeEvery(types.POST_RECORD, postRecord);
-  yield takeEvery(types.GET_RECORD, getRecord);
-  yield takeEvery(types.PUT_RECORD, putRecord);
-  yield takeEvery(types.DELETE_RECORD, deleteRecord);
 }
