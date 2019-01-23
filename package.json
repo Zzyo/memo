@@ -8,10 +8,8 @@
     "build:dll": "webpack --progress -p --config ./build/webpack/webpack.dll.config.js",
     "dev": "cross-env NODE_ENV=development node ./server/app.js",
     "lint": "npm-run-all --parallel lint:*",
-    "lint:js": "eslint ./client/**/*.js",
-    "lint:jsx": "eslint ./client/**/*.jsx",
-    "lint:ts": "tslint ./client/**/*.ts",
-    "lint:tsx": "tslint ./client/**/*.tsx",
+    "lint:js": "eslint ./client/**/*.{js,jsx}",
+    "lint:ts": "tslint ./client/**/*.{ts,tsx}",
     "start": "cross-env NODE_ENV=production node ./server/app.js",
     "restart": "scripty"
   },
@@ -98,6 +96,7 @@
     }
   },
   "lint-staged": {
-    "*.js": ["eslint --fix"]
+    "./client/**/*.{js,jsx}": ["eslint"],
+    "./client/**/*.{ts,tsx}": ["tslint"]
   }
 }
