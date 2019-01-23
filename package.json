@@ -12,7 +12,6 @@
     "lint:jsx": "eslint ./client/**/*.jsx",
     "lint:ts": "tslint ./client/**/*.ts",
     "lint:tsx": "tslint ./client/**/*.tsx",
-    "precommit": "npm run lint",
     "start": "cross-env NODE_ENV=production node ./server/app.js",
     "restart": "scripty"
   },
@@ -92,5 +91,13 @@
   },
   "scripty": {
     "path": "./build/commands"
+  },
+  "husky": {
+    "hooks": {  
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix"]
   }
 }
